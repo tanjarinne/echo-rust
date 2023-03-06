@@ -25,17 +25,16 @@ fn handle_request(stream: &mut TcpStream) {
 fn main() {
     let host = std::env::var("ECHO_HOST").unwrap_or("0.0.0.0".to_string());
     let port = std::env::var("ECHO_PORT").unwrap_or("8989".to_string());
-    let listener = TcpListener::bind(format!("{host}:{port}")).unwrap();
+    let listener = match TcpListener::bind(format!("{host}:{port}")) {
+        Ok(listener) => listener,
+        Err(e) => panic!("Error initialising the server: {}", e),
+    };
+    println!("Echo server listening on {host}:{port}");
 
-    listener.incoming().for_each(|stream| {
+    for stream in listener.incoming() {
         match stream {
-            Ok(mut stream) => {
-                handle_request(&mut stream);
-            }
-
-            Err(e) => {
-                println!("Error: {}", e);
-            }
+            Ok(mut stream) => handle_request(&mut stream),
+            Err(e) => println!("Error: {}", e),
         }
-    });
+    }
  }
