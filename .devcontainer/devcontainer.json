@@ -1,0 +1,9 @@
+{
+  "image": "mcr.microsoft.com/devcontainers/base:debian",
+  "features": {
+    "ghcr.io/devcontainers/features/rust:1": {
+      "version": "1.63",
+      "profile": "complete"
+    }
+  }
+}
